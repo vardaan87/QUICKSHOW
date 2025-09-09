@@ -13,7 +13,7 @@ const syncUserCreation = inngest.createFunction(
       event.data;
     const userData = {
       _id: id,
-      email: email_addresses,
+      email: email_addresses[0].email_address,
       name: first_name + " " + last_name,
       image: image_url,
     };
@@ -30,7 +30,7 @@ const syncUserUpdation = inngest.createFunction(
       event.data;
     const userData = {
       _id: id,
-      email: email_addresses,
+      email: email_addresses[0].email_address,
       name: first_name + " " + last_name,
       image: image_url,
     };
