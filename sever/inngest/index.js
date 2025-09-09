@@ -40,6 +40,27 @@ const syncUserUpdation = inngest.createFunction(
   }
 );
 
+//Inngest function to update user password in database
+
+const syncUserPasswordUpdate = inngest.createFunction(
+  { id: "update-user-password-from-clerk" },
+  { event: "clerk/user.password_updated" },
+  async ({ event }) => {
+    await connectDB();
+
+    const { id, email_addresses } = event.data;
+
+    await User.findOneAndUpdate(
+      { _id: id },
+      {
+        lastPasswordUpdate: new Date(),
+        email: email_addresses[0]?.email_address || "",
+      },
+      { new: true }
+    );
+  }
+);
+
 //Inngest function to delete user from database
 const syncUserDeletion = inngest.createFunction(
   { id: "delete-user-with-clerk" },
@@ -50,4 +71,9 @@ const syncUserDeletion = inngest.createFunction(
   }
 );
 
-export const functions = [syncUserCreation, syncUserUpdation, syncUserDeletion];
+export const functions = [
+  syncUserCreation,
+  syncUserUpdation,
+  syncUserDeletion,
+  syncUserPasswordUpdate,
+];
